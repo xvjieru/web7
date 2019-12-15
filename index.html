@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "utf-8" />
+		<title></title>
+		<style type="text/css">
+			*{
+				padding: 0px;
+				margin: 0px;
+			}
+			.whole{
+				width: 1550px;
+				height: 463px;
+			}
+			.inform{
+				width: 1550px;
+				height: 21px;
+				background-color: rgb(204, 204, 204);
+			}
+			.img{
+				position: absolute;
+				left: 182px;
+				width: 
+			}
+			.p{
+				height: 21px;
+				font-size: 12px;
+				display: inline-block;
+				color: red;
+				position: absolute;
+				left: 980px;
+				float: left;
+			}
+			.toptext{
+				width: 1346px;
+				height: 21px;
+				position: absolute;
+				left: 204px;
+			}
+			.box{
+				width: 1200px;
+				height: 397px;
+				border:1px solid red;
+				position: relative;
+				margin: -400px auto;
+				overflow: hidden;
+			}
+			.slider{
+				width: 8400px;
+				position: absolute;
+				left: -1200px;
+			}
+			.slide{
+				overflow: hidden;
+				float: left;
+			}
+			.slide>img{
+				width: 1200px;
+				height: 397px;
+			}
+			.box>span{
+				display: block;
+				width: 30px;
+				height: 50px;
+				text-align: center;
+				color: white;
+				cursor: pointer;
+				position: absolute;
+				top: 175px;
+				line-height: 50px;
+				font-size: 30px;
+				background-color: rgb(255,0,0);
+				opacity: 0;
+			}
+			#left{
+				left: 30px;
+			}
+			#right{
+				right: 30px;
+			}
+			ul,li{
+				list-style: none;
+			}
+			.lead{
+				position: absolute;
+				left: 500px;
+				bottom: 20px;
+			}
+			.lead>li{
+				float: left;
+				width: 20px;
+				height: 20px;
+				background: gray;
+				cursor:pointer;
+				margin:0 10px;
+				border-radius: 50%;
+				text-align: center;
+				line-height: 20px;
+			}
+			.lead .active{
+				background:red;
+				color: white;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="whole">
+			<div class="inform">
+				<div class="img">
+					<img src="images/a15.png" />
+				</div>
+				<div class="toptext">
+					<p class="p">[温馨提示]最近有不少不法分子在网上骗人，请大家注意！！！</p>
+				</div>	
+			</div>
+			<div class="pics"></div>
+		
+		</div>
+		<div class="box" id="box">
+			<div class="slider">
+				<div class="slide"><img src="images/b5.png"></div>
+				<div class="slide"><img src="images/b1.png"></div>
+				<div class="slide"><img src="images/b2.png"></div>
+				<div class="slide"><img src="images/b3.png"></div>
+				<div class="slide"><img src="images/b4.png"></div>
+				<div class="slide"><img src="images/b5.png"></div>
+				<div class="slide"><img src="images/b1.png"></div>
+			</div>
+			<span id="left"><</span>
+			<span id="right">></span>
+			<ul class="lead" id="lead">
+				<li class="active">1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+			</ul>
+		</div>
+		<script type="text/javascript" src="animate.js"></script>
+		<script>
+			window.onload = function(){
+				function getStyle(obj, style){
+					if(obj.currentStyle)
+						return obj.currentStyle[style];
+					else
+						return getComputedStyle(obj)[style];
+				}
+				var p = document.getElementsByClassName("p")[0];
+				var end = setInterval(function(){
+					var now = parseInt(getStyle(p, "left"));
+					if(now > 0)
+						p.style.left = now - 10 + "px";
+					else
+						p.style.left = "980px";
+				}, 200)
+
+				var index = 1;
+				var slider = document.getElementsByClassName('slider')[0];
+				var left = document.getElementById('left');
+				var right = document.getElementById('right')
+				var list = document.getElementById('lead').children;
+				function playNext(){
+					index++;
+					navChange();
+					animate(slider,{left:-1200*index},function(){
+						if (index === 6) {
+							slider.style.left = "-1200px";
+							index = 1;
+						}
+					});
+				}
+				function playPrev(){
+					index--;
+					navChange();
+					animate(slider,{left:-1200*index},function(){
+						if (index === 0) {
+							slider.style.left = "-6000px";
+							index = 5;
+						}
+					});
+				}
+
+				var timerOut = setInterval(playNext,3000)
+
+				box.onmouseover = function(){
+					left.style.opacity = 0.5;
+					right.style.opacity = 0.5;
+					clearInterval(timerOut);
+				}
+				box.onmouseout = function(){
+					left.style.opacity = 0;
+					right.style.opacity = 0;
+					timerOut = setInterval(playNext,3000);
+				}
+
+				left.onclick = playPrev; 
+				right.onclick = playNext;
+
+				for(var i=0;i<list.length;i++){
+					list[i].idx=i;
+					list[i].onclick = function(){
+						index = this.idx+1;
+						navChange();
+						animate(slider,{left:-1200*index})
+					}
+				}
+				function navChange(){
+					for(var i=0;i<list.length;i++){
+						list[i].className = '';
+					}
+					if(index === 6){
+						list[0].className = 'active';
+					}else if (index === 0) {
+						list[4].className = 'active';
+					}else{
+						list[index-1].className = 'active';
+					}
+				}
+			}
+		</script>
+	</body>
+</html>
